@@ -1,0 +1,48 @@
+<div class="wrapper">
+  <!-- Div Left -->
+  <div class="left">
+    <div class="search">
+      <h1>Search</h1>
+      <input type="search" [(ngModel)]="term">
+    </div>
+    <button (click)="addFood = !addFood">Add new food</button>
+    <div class="addFood" *ngIf="addFood">
+      <form [formGroup]="addFoodForm" (ngSubmit)="submitFood()">
+        <!-- Input Name -->
+        <label for="name">Name: </label>
+        <input type="text" name="name" [formControlName]="'name'"><br>
+        <!-- Input Calories -->
+        <label for="kcal">Calories:</label>
+        <input type="number" name="kcal" [formControlName]="'kcal'" min=0 max=1000><br>
+        <!-- Input Img -->
+        <label for="img">Img: </label>
+        <input type="text" name="img" [formControlName]="'img'"><br>
+        <button type="submit">Add food</button>
+      </form>
+
+    </div>
+
+    <ul>
+      <li *ngFor="let foot of foodService.getFoods() | filter: term; let i = index" #food>
+        <div>
+          <img [src]="foot.image" [alt]="foot.name">
+        </div>
+        <div>
+          <span class="title">{{foot.name}}</span>
+          <span>{{foot.calories}} kcal</span>
+          <br>
+          <input type="number" min="1" max="99" value="1">
+          <button type="button"
+            (click)="foodService.addFoodInList(foodService.getFoods()[this.foodService.getPositionInArray(foot)])">+</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <!-- Div Right -->
+  <div>
+    <h1>Today's Foods {{ foodService.totalKcal }} cal</h1>
+    <p *ngFor="let footItem of foodService.getListFood()">
+      {{footItem.name}} x {{footItem.quantity}}
+    </p>
+  </div>
+</div>
